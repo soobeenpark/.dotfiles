@@ -9,7 +9,7 @@ map <F2> :NERDTreeToggle<CR>
 "Press <F3> to toggle Undotree
 nnoremap <F3> :UndotreeToggle<CR>
 
-"Run remapping
+"Run remapping -- NEED TO CHANGE FOR DIFFERENT PROJECTS
 autocmd Filetype python nnoremap <leader>r :term ./main.py<CR>
 
 "Move between windows easily
@@ -20,9 +20,9 @@ nnoremap <leader>l :wincmd l<CR>
 
 "Move between buffers easily
 "Next buffer in list
-nnoremap <leader>, :bn<CR>
+nnoremap <leader>, :bp<CR>
 "Prev buffer in list
-nnoremap <leader>. :bp<CR>
+nnoremap <leader>. :bn<CR>
 "Delete current buffer
 nnoremap <leader>/ :bd!<CR>
                 
@@ -30,11 +30,16 @@ nnoremap <leader>/ :bd!<CR>
 ""Debug compile
 autocmd filetype cpp noremap <F5> :w <bar> !g++ -std=c++17 -Wshadow -Wall % -o %:r.bin -g -fsanitize=address -fsanitize=undefined -D_GLIBCXX_DEBUG<CR>
 ""Compile
-autocmd filetype cpp noremap <F7> :w <bar> !g++ -std=c++17 -O2 -Wshadow -Wall % -o %:r.bin<CR>
+autocmd filetype cpp noremap <F7> :w <bar> !g++ -std=c++17 -O2 -Wshadow -Wall -Wextra % -o %:r.bin<CR>
 ""Run
-autocmd filetype cpp noremap <F8> :!./%:r.bin<CR>
+autocmd filetype cpp noremap <F8> :!./%:r.bin < in<CR>
+autocmd filetype python noremap <F8> :!python3 %:r.py < in<CR>
 if has('nvim')
-    autocmd filetype cpp noremap <F8> :te ./%:r.bin<CR>
+    ""Create input file for problem input
+    autocmd filetype cpp noremap <F6> :te cat > in<CR>
+    autocmd filetype python noremap <F6> :te cat > in<CR>
+    autocmd filetype cpp noremap <F8> :te ./%:r.bin < in<CR>
+    autocmd filetype python noremap <F8> :te python3 %:r.py < in<CR>
 endif
 ""Remove file
 autocmd filetype cpp noremap <F4> :!rm %:r.bin<CR>
@@ -81,7 +86,7 @@ inoremap {<Cr> {<Cr>}<ESC>O
 """"""""""""""""""Vim Plugins (vim-plug)"""""""""""""""
 call plug#begin('~/.vim/plugged')
 
-Plug 'morhetz/gruvbox'
+Plug 'gruvbox-community/gruvbox'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 "Plug 'sheerun/vim-polyglot'
@@ -97,7 +102,7 @@ call plug#end()
 """"""""""""""""""Color Schemes"""""""""""""""""""""""
 "colorscheme darcula
 
-let g:gruvbox_contrast_dark = 'hard' "Set contrast 'soft', 'medium', 'hard'
+let g:gruvbox_contrast_dark = 'medium' "Set contrast 'soft', 'medium', 'hard'
 colorscheme gruvbox
 
 "colorscheme codedark "(VSCode-like)
