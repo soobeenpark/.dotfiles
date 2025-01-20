@@ -5,6 +5,57 @@ local default_plugins = {
   "nvim-lua/plenary.nvim",
 
   {
+    "nvim-neotest/nvim-nio"
+  },
+
+  {
+    "rcarriga/nvim-dap-ui",
+    dependencies = "mfussenegger/nvim-dap",
+    event = "VeryLazy",
+    config = function()
+      local dap = require("dap")
+      local dapui = require("dapui")
+      dapui.setup()
+      dap.listeners.after.event_initialized["dapui_config"] = function()
+        dapui.open()
+      end
+      dap.listeners.before.event_terminated["dapui_config"] = function()
+        dapui.close()
+      end
+      dap.listeners.before.event_exited["dapui_config"] = function()
+        dapui.close()
+      end
+    end,
+  },
+
+  {
+    "jay-babu/mason-nvim-dap.nvim",
+    dependencies = {
+      "williamboman/mason.nvim",
+      "mfussenegger/nvim-dap",
+    },
+    opts = {
+      handlers = {},
+    },
+    event = "VeryLazy",
+  },
+
+  {
+    "mfussenegger/nvim-dap",
+    config = function(_, _)
+      require("core.utils").load_mappings("dap")
+    end
+  },
+
+  {
+    "jose-elias-alvarez/null-ls.nvim",
+    event = "VeryLazy",
+    opts = function()
+      return require "custom.configs.null-ls"
+    end,
+  },
+
+  {
     "NvChad/base46",
     branch = "v2.0",
     build = function()
@@ -19,7 +70,7 @@ local default_plugins = {
   },
 
   {
-    "NvChad/nvterm",
+    "zbirenbaum/nvterm",
     init = function()
       require("core.utils").load_mappings "nvterm"
     end,
@@ -70,7 +121,6 @@ local default_plugins = {
   {
     "nvim-treesitter/nvim-treesitter",
     event = { "BufReadPost", "BufNewFile" },
-    tag = "v0.9.2",
     cmd = { "TSInstall", "TSBufEnable", "TSBufDisable", "TSModuleInfo" },
     build = ":TSUpdate",
     opts = function()
@@ -121,6 +171,7 @@ local default_plugins = {
     "neovim/nvim-lspconfig",
     event = "User FilePost",
     config = function()
+      require "custom.configs.lspconfig"
       require "plugins.configs.lspconfig"
     end,
   },
@@ -241,6 +292,12 @@ local default_plugins = {
       dofile(vim.g.base46_cache .. "whichkey")
       require("which-key").setup(opts)
     end,
+  },
+
+  {
+    'mrcjkb/rustaceanvim',
+    version = '^4', -- Recommended
+    lazy = false, -- This plugin is already lazy
   },
 }
 
