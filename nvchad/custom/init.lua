@@ -21,3 +21,6 @@ vim.api.nvim_create_autocmd("FileType", {
   end
 })
 
+local bufopts = { noremap = true, silent = true, buffer = true }
+vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float, bufopts)
+
